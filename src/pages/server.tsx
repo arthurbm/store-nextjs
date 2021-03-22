@@ -39,7 +39,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
 
     return {
       props: {
-        recommendedProducts
+        recommendedProducts,
       }
     }
 }

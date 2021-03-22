@@ -1,4 +1,3 @@
-import { GetServerSideProps } from 'next';
 import { useEffect, useState } from 'react'
 import { Title } from '../styles/pages/Home'
 
@@ -7,11 +6,17 @@ interface IProduct {
   title: string;
 }
 
-interface HomeProps {
-  recommendedProducts: IProduct[];
-}
+export default function Client() {
+  const [recommendedProducts, setRecommendedProducts] = useState<IProduct[]>([]);
 
-export default function Home({ recommendedProducts }: HomeProps) {
+  useEffect(() => {
+    // Também é possível usar o axios ou SWR (Criado pelo Next, facilita client side fetching)
+    fetch('http://localhost:3333/recommended').then(response => {
+      response.json().then(data => {
+        setRecommendedProducts(data);
+      })
+    })
+  }, [])
 
   return (
     <>      
@@ -30,16 +35,4 @@ export default function Home({ recommendedProducts }: HomeProps) {
       </ul>
     </>
   )
-}
-
-
-export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
-  const res = await fetch('http://localhost:3333/recommended');
-  const recommendedProducts = await res.json();
-
-    return {
-      props: {
-        recommendedProducts
-      }
-    }
 }
